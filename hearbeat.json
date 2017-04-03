@@ -1,0 +1,18 @@
+{
+  "channelName": "Test Channel",
+  "mediaType": "episode",
+  "mediaId": "movie_id | series_id | season_id | episode_id | extra_video_id",
+  "topLevelMediaId": "series_id | movie_listing_id",
+  "mediaTitle": "series title | season title |  episode number | episode title OR if there is no season series title | episode number | episode title OR movie title OR for extra_video_series series title | extra title OR for movie extra series title | extra title",
+  "mediaSubtitleLanguage": "en-US",
+  "mediaAudioLanguage": "ja-JP",
+  "mediaDuration": 2859.445,
+  "mediaAdSupported": true,
+  "mediaReleaseDate": "2017-01-15",
+
+  "playheadTime": 400.303,
+  "secondsViewed": 400.303,
+  "elapsedDelta": 31.24,
+  "topLevelId": "238014",
+  "topLevelType": "series"
+}

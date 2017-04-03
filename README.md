@@ -4,6 +4,7 @@ Heartbeat!
 Video Pings are important for tracking the end user experience and indispensable for correct revenue sharing with our
 publisher partners/content providers.  [Link to heartbeat spec.](https://ellation.atlassian.net/wiki/pages/viewpage.action?pageId=56492094)
 [Link to general tracking data.](https://docs.google.com/spreadsheets/d/1UnGlLzM8AjHwLNE7deMqI2fuCbzl-yO9LeqgkfRcXY4/edit#gid=1936183852)
+[Example JSON](https://docs.google.com/spreadsheets/d/1UnGlLzM8AjHwLNE7deMqI2fuCbzl-yO9LeqgkfRcXY4/edit#gid=138786414)
 
 They are not a timer that pings every 30 seconds.  That would be a 'wall watching' approach.  What we really want is 
 a heartbeat after every 30 seconds of video watched.  The hearbeat would include three temporal data.  One is 
