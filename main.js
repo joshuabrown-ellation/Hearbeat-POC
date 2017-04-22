@@ -1,34 +1,48 @@
 /**
  * Created by joshuabrown on 4/2/17.
  */
-var videoEvents = [
-    'timeupdate',
-    'seek',
+var pingEvents = [
+    'abort',
+    'canplay',
+    'canplaythrough',
+    'durationchange',
+    'emptied',
+    'ended',
+    'error',
+    'interruptbegin',
+    'interruptend',
+    'loadeddata',
+    'loadedmetadata',
+    'loadstart',
+    'pause',
+    'play',
+    'playing',
+    'progress',
+    'ratechange',
     'seeked',
     'seeking',
-    'ended',
+    'stalled',
+    'suspend',
+    'timeupdate',
+    'volumechange',
     'waiting',
-    'pause',
   ],
-  eventHistory = [], // what events have happened
+  eventHistory = ['','','','',''], // what events have happened
   historyLength = 5, // what events have happened
   secondsViewed = 0, // how much of the video we watched
   previousTime, // previous time, if undefined, assume this is the first time event
   now, // cache Date.now() method in one place
-  previousTimeOfDelta = 0,
+  previousTimeOfDelta,
   elapsedDelta = 0, // how long since we last sent a ping
   heartBeatInterval = 5,  // seconds between heartbeats
   demoVid = document.getElementById('demo_vid'), // demo vid!
   heartBeatLed = document.getElementById('led'), // output led
   secondsWatchedOutput = document.getElementById('watched'), // how long we've watched
-  elapsedDeltaOutput = document.getElementById('delta'), // how long we've watched
-  externalPause = document.getElementById('external_pause'),
-  isExternalPause = false;
-
+  elapsedDeltaOutput = document.getElementById('delta'); // how long we've watched
 
 function ping() {
   heartBeatLed.style.backgroundColor = 'red';
-  if(secondsViewed === previousTimeOfDelta){
+  if (secondsViewed === previousTimeOfDelta && previousTimeOfDelta !== undefined && eventHistory[historyLength - 2] !== 'pause') {
     return;
   }
   previousTimeOfDelta = secondsViewed;
@@ -46,23 +60,18 @@ function ping() {
     "mediaAdSupported": true,
     "topLevelId": "238014",
     "topLevelType": "series",
-    "secondsViewed": secondsViewed.toString(),
-    "elapsedDelta": elapsedDelta.toString(),
-    "playheadTime": now.toString(),
+    "secondsViewed": secondsViewed.toFixed(3).toString(),
+    "elapsedDelta": elapsedDelta.toFixed(3).toString(),
+    "playheadTime": now.toFixed(3).toString(),
   });
   setTimeout(function heartBeatReset() {
     heartBeatLed.style.backgroundColor = '';
   }, 300);
 }
 
-function update(){
-  previousTime = now;
-  secondsWatchedOutput.innerHTML = secondsViewed;
-  elapsedDelta = secondsViewed - previousTimeOfDelta;
-  elapsedDeltaOutput.innerHTML = elapsedDelta;
-}
-function eventHandler(event) {
+function pingEventHandler(event) {
   now = demoVid.currentTime;
+  console.log(event.type);
 
   if (eventHistory.length < historyLength) {
     eventHistory.push(event.type);
@@ -80,42 +89,31 @@ function eventHandler(event) {
           previousTime = now;
         }
       }
-      update();
       if(elapsedDelta >= heartBeatInterval){
         ping();
       }
       break;
+    case 'play':
+    case 'playing':
     case 'pause':
-      if(!isExternalPause){
-        update();
-        ping();
-      }
-      isExternalPause = false;
-      break;
     case 'waiting':
     case 'ended':
-      // do something about stopping
-      update();
+      // do something about stopping or stopping
       ping();
-      break;
-    case 'seek':
-    case 'seeking':
-    case 'seeked':
-      // do something about scrubbing
       break;
     default:
       break;
   }
+  previousTime = now;
+  secondsWatchedOutput.innerHTML = secondsViewed;
+  elapsedDelta = secondsViewed - previousTimeOfDelta;
+  elapsedDeltaOutput.innerHTML = elapsedDelta;
 }
 
 function setup(events) {
   events.forEach(function eventForEach(item) {
-    demoVid.addEventListener(item, eventHandler);
-  });
-  externalPause.addEventListener('click', function() {
-    isExternalPause = true;
-    demoVid.pause();
+    demoVid.addEventListener(item, pingEventHandler);
   });
 }
 
-setup(videoEvents);
+setup(pingEvents);

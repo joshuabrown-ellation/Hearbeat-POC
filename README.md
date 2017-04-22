@@ -11,20 +11,13 @@ a heartbeat after every 30 seconds of video watched.  The hearbeat would include
 secondsViewed.  This number will climb as you watch the video.  So if you scrub back and watch a really cool part
 of the video a few times, your secondsViewed can be longer than the video's duration.  The other is the time between
 the last video heartbeat and this heartbeat, or elapsedDelta.  We are watching a video after all, so we also include
-playheadTime from the video.  
+the third datum, the playheadTime from the video.  
 
 The spec includes a requirement to fire video pings at user Pause and any video Stop events.
 
 In HTML5 media terms, that would be derived from 'timeupdate', 'pause', 'ended' events.
 'waiting' is when user playback has stopped because of lack of data.  That's ping worthy!
-'playing' is when user playback has resumed because the data available again.  However we'll capture 'timeupdate' for 
-video watched so we don't need 'playing'
-
-'pause' is emitted by the player whether the user OR the ad tech initiates it.  We only want the events in ping form if
-the user has initiated them.  If we are subscribed to the 'pause' event in AnalyticsService, we would not fire the ping 
-upon ad tech finishing an ad.  So before calling player.pause(), we would have a pingOverride value we'd set on the
-player that would be cleared by the next player timeupdate.  The 'pause' listener would fire the pause event only if 
-the 'pause' event is emitted by the player when pingOverride is false.
+'playing' is when user playback has resumed because the data available again. 
 
 'timeupdate' is emitted by the player while seek, seeked, seeking events.  So, 'timeupdate' will have to be suppressed
 as a source of truth for seconds viewed while seek, seeked, seeking is is happening.
